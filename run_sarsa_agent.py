@@ -1,26 +1,52 @@
 from auxFunctions import getState, load_obj, maxAction
 import gym
+import numpy as np
 
 env = gym.make('MountainCar-v0')
-# Set the max step to 200
 env._max_episode_steps = 200
 
-# Load Q-table trained with SARSA
+# Load trained SARSA Q-table
 Q = load_obj('pre-trained-SARSA')
 
-# Run 10 episodes
-for episode in range(10):
-    done = False
+eval_episodes = 100
+
+total_success = 0
+total_steps = 0
+total_return = 0
+
+for episode in range(eval_episodes):
+
     observation = env.reset()
     state = getState(observation)
-    # While the car don't reach the goal or number of steps < 200
+    done = False
+
+    steps = 0
+    episode_return = 0
+
     while not done:
-        env.render()
-        print(observation)
-        # Take the best action for that state given trained values
-        action = maxAction(Q, state)
+        # Pure greedy action (no exploration)
+        action = int(maxAction(Q, state))
+
         observation, reward, done, info = env.step(action)
-        # Go to next state
+
+        episode_return += reward
+        steps += 1
         state = getState(observation)
 
+    # Check if goal reached
+    if observation[0] >= 0.5:
+        total_success += 1
+
+    total_steps += steps
+    total_return += episode_return
+
 env.close()
+
+# Compute metrics
+success_rate = total_success / eval_episodes
+avg_steps = total_steps / eval_episodes
+avg_return = total_return / eval_episodes
+
+print("Success Rate:", success_rate)
+print("Average Steps:", avg_steps)
+print("Average Return:", avg_return)

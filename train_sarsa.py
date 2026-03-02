@@ -10,10 +10,10 @@ env._max_episode_steps = 1000
 Q = createEmptyQTable()
 
 # Hyperparameters 
-alpha = 0.1 # Learning Rate
-gamma = 0.9 # Discount Factor 
-epsilon = 1 # e-Greedy 
-episodes = 50000 # number of episodes
+alpha = 0.05 # Learning Rate
+gamma = 0.99 # Discount Factor
+epsilon = 0.9 # e-Greedy
+episodes = 10000 # number of episodes
 
 score = 0
 # Variable to keep track of the total score obtained at each episode

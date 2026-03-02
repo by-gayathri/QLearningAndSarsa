@@ -10,10 +10,14 @@ env._max_episode_steps = 1000
 Q = createEmptyQTable()
 
 # Hyperparameters 
-alpha = 0.1 # Learning Rate
-gamma = 0.9 # Discount Factor 
+alpha = 0.05 # Learning Rate
+gamma = 0.99 # Discount Factor
 epsilon = 1 # e-Greedy 
-episodes = 50000 # number of episodes
+episodes = 10000 # number of episodes
+
+# Additional
+epsilon_min = 0.01
+epsilon_decay = 0.999
 
 score = 0
 # Variable to keep track of the total score obtained
@@ -57,7 +61,8 @@ for i in range(episodes):
     # Save score for this episode
     total_score[i] = score
     # Reduce epsilon 
-    epsilon = epsilon - 2/episodes if epsilon > 0.01 else 0.01
+    # epsilon = epsilon - 2/episodes if epsilon > 0.01 else 0.01
+    epsilon = max(epsilon_min, epsilon * epsilon_decay)
 
 # Save Q-table as .pkl file
 save_obj(Q, 'Q-table-Q-Learning')
